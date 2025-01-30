@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head> 
+
+    <link href = "events.css" rel = "stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+</head>
+  <body>
+    <div class="form-container">
+        <form class="event-form" id="eventForm">
+            <div class="form-group">
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" class="form-input" placeholder="Enter the event name" required>
+            </div>
+            <div class="form-group">
+                <label for="organizerName">Organizer Name:</label>
+                <input type="text" id="organizerName" name="organizerName" class="form-input" placeholder="Enter the organizer's name" required>
+            </div>
+            <div class="form-group">
+                <label for="eventDate">Event Date:</label>
+                <input type="date" id="eventDate" name="eventDate" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="startTime">Start Time:</label>
+                <input type="time" id="startTime" name="startTime" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="endTime">End Time:</label>
+                <input type="time" id="endTime" name="endTime" class="form-input">
+            </div>
+            <div class="form-group">
+                <label for="eventLocation">Event Location:</label>
+                <input type="text" id="eventLocation" name="eventLocation" class="form-input" placeholder="Enter the event location" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Event Description:</label>
+                <textarea id="description" name="description" class="form-input" rows="4" placeholder="Provide a brief description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="contactEmail">Contact Email:</label>
+                <input type="email" id="contactEmail" name="contactEmail" class="form-input" placeholder="Enter the contact email" required>
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Contact Phone:</label>
+                <input type="tel" id="contactPhone" name="contactPhone" class="form-input" placeholder="Enter the contact phone number" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+                <label for="attendees">Expected Number of Attendees:</label>
+                <input type="number" id="attendees" name="attendees" class="form-input" placeholder="Enter the number of attendees" min="1">
+            </div>
+            <div class="form-group">
+                <label for="eventType">Event Type:</label>
+                <select id="eventType" name="eventType" class="form-input" required>
+                    <option value="">Select an event type</option>
+                    <option value="conference">Conference</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="seminar">Seminar</option>
+                    <option value="meetup">Meetup</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="form-button">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        
+        document.getElementById("eventForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const formData = {
+        eventName: document.getElementById("eventName").value,
+        organizerName: document.getElementById("organizerName").value,
+        eventDate: document.getElementById("eventDate").value,
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        eventLocation: document.getElementById("eventLocation").value,
+        description: document.getElementById("description").value,
+        contactEmail: document.getElementById("contactEmail").value,
+        contactPhone: document.getElementById("contactPhone").value,
+        attendees: document.getElementById("attendees").value,
+        eventType: document.getElementById("eventType").value,
+    };
+
+    try {
+        const response = await fetch("http://localhost:5000/api/events", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            alert("Event created successfully!");
+            console.log(result);
+            document.getElementById("eventForm").reset();
+        } else {
+            const error = await response.json();
+            alert("Failed to create event: " + error.error);
+        }
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
+});
+
+    </script>
+  </body>
+  </html>
